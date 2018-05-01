@@ -13,20 +13,20 @@ call vundle#begin()
 "Plugin 'minibufexpl.vim' "buffer管理
 "Plugin 'comments.vim'                       "快速注释
 Plugin 'winmanager'                         "窗口管理
-Plugin 'flazz/vim-colorschemed'
 Plugin 'gmarik/Vundle.vim'
 Plugin 'klen/python-mode'
 Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'flazz/vim-colorschemes'
 
 Plugin 'pangloss/vim-javascript'            
 Plugin 'mattn/emmet-vim'                    
 
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'                 "代码片段补全
-
+Plugin 'Shougo/echodoc.vim'
 Plugin 'w0rp/ale'                           "取代syntastic，异步语法检测
 
-Plugin 'majutsushi/tagbar'                  "支持大纲浏览
+Plugin 'Yggdroot/LeaderF'                   "干掉tagbar
 Plugin 'tpope/vim-fugitive'                 "git支持，直接在vim中执行Git命令
 Plugin 'Valloric/YouCompleteMe'            
 Plugin 'scrooloose/nerdcommenter'           "快速注释，支持几乎所有编程语言
@@ -69,6 +69,12 @@ let g:ycm_semantic_triggers =  {
 			\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
 			\ 'cs,lua,javascript': ['re!\w{2}'],
 			\ }
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_show_diagnostics_ui = 0
+
+
+
 let g:livepreview_previewer = 'evince' " :LLPStartPreview 预览
 let g:vim_markdown_math = 1
 let g:vim_markdown_folding_disabled = 1
@@ -259,13 +265,21 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 
 "=========================
-" tagbar
+"Leaderf
 "=========================
-nmap <F3> :TagbarToggle<CR>
-let g:tagbar_width = 30
-let g:tagbar_left = 0
-let g:tagbar_autofocus = 0
+noremap <F3> :LeaderfFunction!<cr>
+let g:Lf_ShowRelativePath = 0
+let g:Lf_HideHelp = 1
+let g:Lf_PreviewResult = {'Function':0, 'Colorscheme':1}
 
+let g:Lf_NormalMap = {
+	\ "File":   [["<ESC>", ':exec g:Lf_py "fileExplManager.quit()"<CR>']],
+	\ "Buffer": [["<ESC>", ':exec g:Lf_py "bufExplManager.quit()"<CR>']],
+	\ "Mru":    [["<ESC>", ':exec g:Lf_py "mruExplManager.quit()"<CR>']],
+	\ "Tag":    [["<ESC>", ':exec g:Lf_py "tagExplManager.quit()"<CR>']],
+	\ "Function":    [["<ESC>", ':exec g:Lf_py "functionExplManager.quit()"<CR>']],
+	\ "Colorscheme":    [["<ESC>", ':exec g:Lf_py "colorschemeExplManager.quit()"<CR>']],
+	\ }
 
 "============================================================================
 "解决tmux和terminator中airline的显示问题
@@ -321,9 +335,15 @@ nmap <C-P> :FZF<Return>
 "============================================================================
 "ale
 "============================================================================
-let g:ale_lint_on_text_changed=1
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_enter=1
 let g:ale_lint_on_save=1
 let g:ale_lint_on_filetype_changed=1
 nmap <Leader>s :ALEToggle<CR>
 
+"=========================
+"echodoc.vim
+"=========================
+set noshowmode
+let g:echodoc#enable_at_startup=1	
